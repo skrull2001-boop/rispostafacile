@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RispostaFacile.ai — Risposte Email Automatiche per Commercialisti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #FDFBF7;
+            --color-bg-alt: #F5F1EA;
+            --color-text: #1A1A1A;
+            --color-text-muted: #6B6B6B;
+            --color-accent: #2D5A3D;
+            --color-accent-light: #E8F0EB;
+            --color-border: #E5E0D8;
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            font-size: 17px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(253, 251, 247, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--color-text);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--color-accent);
+        }
+
+        .nav-cta {
+            background: var(--color-accent);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            background: #234A30;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-accent-light);
+            color: var(--color-accent);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            width: fit-content;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .hero-label::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            animation: fadeInUp 0.6s ease 0.1s forwards;
+            opacity: 0;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--color-accent);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #234A30;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 90, 61, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text);
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            border: 1px solid var(--color-border);
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-bg-alt);
+            border-color: var(--color-text-muted);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Social Proof */
+        .social-proof {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--color-border);
+            animation: fadeInUp 0.6s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .social-proof p {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--color-accent);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Problem Section */
+        .problem {
+            background: var(--color-bg-alt);
+            padding: 6rem 2rem;
+        }
+
+        .problem-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .problem h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 400;
+            margin-bottom: 3rem;
+            max-width: 700px;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .problem-card {
+            background: var(--color-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+        }
+
+        .problem-card-icon {
+            width: 48px;
+            height: 48px;
+            background: #FEE9E9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            font-size: 1.5rem;
+        }
+
+        .problem-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .problem-card p {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Solution Section */
+        .solution {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .solution h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+            max-width: 700px;
+        }
+
+        .solution > p {
+            color: var(--color-text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            position: relative;
+            padding: 2rem;
+            background: var(--color-bg-alt);
+            border-radius: 12px;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: var(--color-accent);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .step h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .step p {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            background: var(--color-text);
+            color: var(--color-bg);
+            padding: 6rem 2rem;
+        }
+
+        .demo-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .demo-section h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .demo-section > .demo-inner > p {
+            color: #A0A0A0;
+            margin-bottom: 3rem;
+        }
+
+        .demo-box {
+            background: #2A2A2A;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: left;
+        }
+
+        .demo-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-tab {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-family: var(--font-body);
+        }
+
+        .demo-tab.active {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .demo-tab:not(.active) {
+            background: #3A3A3A;
+            color: #A0A0A0;
+        }
+
+        .demo-content {
+            display: none;
+        }
+
+        .demo-content.active {
+            display: block;
+        }
+
+        .demo-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #808080;
+            margin-bottom: 0.75rem;
+        }
+
+        .demo-email {
+            background: #1A1A1A;
+            border-radius: 8px;
+            padding: 1.25rem;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #E0E0E0;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .demo-response {
+            background: linear-gradient(135deg, rgba(45, 90, 61, 0.2), rgba(45, 90, 61, 0.05));
+            border-radius: 8px;
+            padding: 1.25rem;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #E0E0E0;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .demo-response strong {
+            color: var(--color-accent);
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 6rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .pricing h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .pricing > p {
+            color: var(--color-text-muted);
+            margin-bottom: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--color-bg-alt);
+            border: 2px solid var(--color-accent);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .pricing-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-card .price {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            color: var(--color-accent);
+            margin: 1rem 0;
+        }
+
+        .pricing-card .price span {
+            font-size: 1rem;
+            color: var(--color-text-muted);
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin: 2rem 0;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        .pricing-card .btn-primary {
+            width: 100%;
+            justify-content: center;
+            padding: 1.25rem;
+            font-size: 1.1rem;
+        }
+
+        .pricing-guarantee {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        /* FAQ */
+        .faq {
+            background: var(--color-bg-alt);
+            padding: 6rem 2rem;
+        }
+
+        .faq-inner {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 400;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .faq-item {
+            background: var(--color-bg);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--color-accent);
+            transition: transform 0.2s ease;
+        }
+
+        .faq-item.open .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--color-text-muted);
+        }
+
+        /* CTA */
+        .final-cta {
+            padding: 6rem 2rem;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .final-cta h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .final-cta p {
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-text);
+            color: #A0A0A0;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: #A0A0A0;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-copy {
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+            
+            .hero {
+                padding: 6rem 1.5rem 3rem;
+            }
+
+            .stats {
+                gap: 2rem;
+            }
+
+            .problem, .solution, .demo-section, .pricing, .faq, .final-cta {
+                padding: 4rem 1.5rem;
+            }
+
+            .pricing-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">Risposta<span>Facile</span>.ai</a>
+        <a href="#demo" class="nav-cta">Prova Gratuita</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-label">Nuovo: AI per Studi Professionali</div>
+        <h1>Rispondi alle email dei clienti in <em>10 secondi</em>, non 10 minuti</h1>
+        <p class="hero-subtitle">L'assistente AI che genera risposte professionali alle domande fiscali dei tuoi clienti. Tu approvi con un click, loro ricevono risposte immediate.</p>
+        <div class="hero-cta-group">
+            <a href="/app" class="btn-primary">
+                Prova Gratis →
+            </a>
+            <a href="#come-funziona" class="btn-secondary">Guarda come funziona</a>
+        </div>
+        <div class="social-proof">
+            <p>I numeri che contano</p>
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">83%</span>
+                    <span class="stat-label">Tempo risparmiato</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">&lt;30s</span>
+                    <span class="stat-label">Per risposta</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Controllo umano</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="problem">
+        <div class="problem-inner">
+            <span class="section-label">Il Problema</span>
+            <h2>Le email dei clienti ti rubano ore ogni giorno</h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-card-icon">📧</div>
+                    <h3>Domande ripetitive</h3>
+                    <p>"Quando scade l'F24?" "Come funziona il bonus?"  Le stesse domande, riscritte 100 volte.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-card-icon">⏰</div>
+                    <h3>Tempo frammentato</h3>
+                    <p>Ogni email interrompe il lavoro vero. 50 interruzioni al giorno = zero concentrazione.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-card-icon">😤</div>
+                    <h3>Clienti impazienti</h3>
+                    <p>"Mi ha risposto?" "Ha visto la mia email?" Aspettative di risposta immediata, impossibili da soddisfare.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="solution" id="come-funziona">
+        <span class="section-label">La Soluzione</span>
+        <h2>RispostaFacile genera draft perfetti. Tu approvi.</h2>
+        <p>Nessuna automazione cieca. L'AI propone, tu decidi. Sempre.</p>
+        <div class="steps">
+            <div class="step">
+                <span class="step-number">1</span>
+                <h3>Incolla l'email</h3>
+                <p>Copia la domanda del cliente nella dashboard. Zero integrazioni complicate.</p>
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <h3>AI genera risposta</h3>
+                <p>In 5 secondi hai un draft professionale, nel tuo tono, con le info corrette.</p>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <h3>Modifica se serve</h3>
+                <p>Cambia una parola, aggiungi un dettaglio. O approva così com'è.</p>
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <h3>Copia e invia</h3>
+                <p>Un click per copiare. Incolla nella tua email. Fatto.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section" id="demo">
+        <div class="demo-inner">
+            <h2>Guarda RispostaFacile in azione</h2>
+            <p>Esempi reali di domande e risposte generate</p>
+            <div class="demo-box">
+                <div class="demo-tabs">
+                    <button class="demo-tab active" data-tab="1">Scadenza F24</button>
+                    <button class="demo-tab" data-tab="2">Bonus edilizi</button>
+                    <button class="demo-tab" data-tab="3">Fattura estera</button>
+                </div>
+                <div class="demo-content active" data-content="1">
+                    <div class="demo-label">Email del cliente</div>
+                    <div class="demo-email">
+                        Buongiorno Dottore,<br><br>
+                        volevo sapere quando scade il prossimo F24 per i contributi INPS della mia ditta individuale. Mi sembra fosse questo mese ma non ricordo la data esatta. Può confermarmi?<br><br>
+                        Grazie, Mario Rossi
+                    </div>
+                    <div class="demo-label">Risposta generata in 5 secondi</div>
+                    <div class="demo-response">
+                        Gentile Sig. Rossi,<br><br>
+                        confermo che la scadenza per il versamento dei contributi INPS tramite F24 per le ditte individuali è fissata al <strong>16 del mese corrente</strong>.<br><br>
+                        Le ricordo che se il 16 cade di sabato o festivo, la scadenza slitta al primo giorno lavorativo successivo.<br><br>
+                        Resto a disposizione per qualsiasi chiarimento.<br><br>
+                        Cordiali saluti
+                    </div>
+                </div>
+                <div class="demo-content" data-content="2">
+                    <div class="demo-label">Email del cliente</div>
+                    <div class="demo-email">
+                        Buonasera,<br><br>
+                        ho sentito che il bonus ristrutturazioni è cambiato. Posso ancora detrarre il 50%? Devo fare lavori al bagno di casa.<br><br>
+                        Grazie, Anna Bianchi
+                    </div>
+                    <div class="demo-label">Risposta generata in 5 secondi</div>
+                    <div class="demo-response">
+                        Gentile Sig.ra Bianchi,<br><br>
+                        sì, il <strong>bonus ristrutturazioni al 50%</strong> è ancora attivo per il 2024 per interventi di manutenzione straordinaria su singole unità abitative, inclusi i lavori al bagno.<br><br>
+                        Il tetto di spesa detraibile rimane <strong>96.000€ per unità immobiliare</strong>, con recupero in 10 rate annuali.<br><br>
+                        Per procedere correttamente, sarà necessario effettuare i pagamenti tramite bonifico "parlante". Possiamo fissare un appuntamento per verificare i dettagli del suo intervento?<br><br>
+                        Cordiali saluti
+                    </div>
+                </div>
+                <div class="demo-content" data-content="3">
+                    <div class="demo-label">Email del cliente</div>
+                    <div class="demo-email">
+                        Dottore buongiorno,<br><br>
+                        ho ricevuto una fattura da un fornitore tedesco. Come mi devo comportare per l'IVA? Devo fare qualcosa di particolare?<br><br>
+                        Saluti, Giuseppe Verdi
+                    </div>
+                    <div class="demo-label">Risposta generata in 5 secondi</div>
+                    <div class="demo-response">
+                        Gentile Sig. Verdi,<br><br>
+                        per gli acquisti intracomunitari da fornitori UE come la Germania, si applica il meccanismo del <strong>reverse charge</strong>.<br><br>
+                        In pratica: la fattura tedesca arriva senza IVA, e lei deve integrarla annotandola sia nel registro acquisti che vendite, applicando l'aliquota italiana.<br><br>
+                        Mi invii la fattura e provvederò alla corretta registrazione e all'inclusione nel modello Intrastat se necessario.<br><br>
+                        Cordiali saluti
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="prezzi">
+        <span class="section-label">Prezzo Semplice</span>
+        <h2>Un piano, tutto incluso</h2>
+        <p>Niente tier confusi. Niente costi nascosti.</p>
+        <div class="pricing-card">
+            <h3>Piano Professionale</h3>
+            <div class="price">€149<span>/mese</span></div>
+            <ul class="pricing-features">
+                <li>Risposte illimitate</li>
+                <li>Tutti i tipi di domande fiscali</li>
+                <li>Tono personalizzabile</li>
+                <li>Storico conversazioni</li>
+                <li>Supporto email prioritario</li>
+                <li>Aggiornamenti normativi inclusi</li>
+            </ul>
+            <a href="/app" class="btn-primary">Inizia Prova Gratuita</a>
+            <p class="pricing-guarantee">14 giorni gratis • Nessuna carta richiesta • Cancella quando vuoi</p>
+        </div>
+    </section>
+
+    <section class="faq">
+        <div class="faq-inner">
+            <h2>Domande Frequenti</h2>
+            <div class="faq-item">
+                <div class="faq-question">L'AI può sbagliare le risposte?</div>
+                <div class="faq-answer">
+                    <p>L'AI è addestrata su normativa fiscale italiana aggiornata, ma ogni risposta passa da te prima dell'invio. Tu mantieni sempre il controllo e la responsabilità professionale. Pensa a RispostaFacile come un assistente che prepara le bozze — la firma finale è sempre tua.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Devo integrarlo con la mia email?</div>
+                <div class="faq-answer">
+                    <p>No, funziona con copia-incolla. Nessuna integrazione OAuth, nessun accesso alla tua casella email. Copi la domanda del cliente, generi la risposta, la incolli nella tua email. Semplice e sicuro.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Posso personalizzare il tono delle risposte?</div>
+                <div class="faq-answer">
+                    <p>Sì. Puoi impostare il livello di formalità, il tuo nome/firma standard, e frasi ricorrenti che usi. L'AI impara il tuo stile e genera risposte coerenti con la tua comunicazione abituale.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">I dati dei miei clienti sono al sicuro?</div>
+                <div class="faq-answer">
+                    <p>I testi che incolli vengono elaborati in tempo reale e non vengono salvati sui nostri server. Utilizziamo crittografia end-to-end e siamo conformi GDPR. Non vendiamo né condividiamo alcun dato.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Cosa succede se cancello l'abbonamento?</div>
+                <div class="faq-answer">
+                    <p>Puoi cancellare in qualsiasi momento dalla dashboard. L'accesso rimane attivo fino alla fine del periodo pagato. Nessuna penale, nessuna domanda.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <h2>Pronto a riprenderti le tue ore?</h2>
+        <p>Inizia gratis oggi. Nessuna carta di credito richiesta.</p>
+        <a href="/app" class="btn-primary">Prova RispostaFacile Gratis →</a>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Termini di Servizio</a>
+            <a href="mailto:info@rispostafacile.ai">Contatti</a>
+        </div>
+        <p class="footer-copy">© 2024 RispostaFacile.ai — Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+
+        // Demo Tabs
+        document.querySelectorAll('.demo-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.demo-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelector(`.demo-content[data-content="${tab.dataset.tab}"]`).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

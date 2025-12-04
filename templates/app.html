@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RispostaFacile.ai — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #FDFBF7;
+            --color-bg-alt: #F5F1EA;
+            --color-text: #1A1A1A;
+            --color-text-muted: #6B6B6B;
+            --color-accent: #2D5A3D;
+            --color-accent-light: #E8F0EB;
+            --color-border: #E5E0D8;
+            --color-success: #2D5A3D;
+            --color-error: #C53030;
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-border);
+            background: white;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            color: var(--color-text);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--color-accent);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .usage-badge {
+            background: var(--color-accent-light);
+            color: var(--color-accent);
+            padding: 0.4rem 0.8rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Main Layout */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Panels */
+        .panel {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-title-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--color-bg-alt);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .panel-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Input Panel */
+        .input-textarea {
+            width: 100%;
+            flex: 1;
+            min-height: 300px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            resize: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-textarea:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .input-textarea::placeholder {
+            color: #A0A0A0;
+        }
+
+        .input-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            gap: 1rem;
+        }
+
+        .char-count {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+
+        .btn-generate {
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            padding: 0.9rem 1.75rem;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-generate:hover:not(:disabled) {
+            background: #234A30;
+            transform: translateY(-1px);
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-generate .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn-generate.loading .spinner {
+            display: block;
+        }
+
+        .btn-generate.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Output Panel */
+        .output-placeholder {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--color-text-muted);
+            padding: 2rem;
+        }
+
+        .output-placeholder-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .output-placeholder h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .output-content {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .output-content.visible {
+            display: flex;
+        }
+
+        .output-textarea {
+            width: 100%;
+            flex: 1;
+            min-height: 300px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            resize: none;
+            background: var(--color-accent-light);
+            border-color: var(--color-accent);
+        }
+
+        .output-textarea:focus {
+            outline: none;
+        }
+
+        .output-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            gap: 1rem;
+        }
+
+        .output-meta {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .output-meta-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-success);
+            border-radius: 50%;
+        }
+
+        .btn-copy {
+            background: white;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            padding: 0.9rem 1.75rem;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-copy:hover {
+            background: var(--color-bg-alt);
+            border-color: var(--color-text-muted);
+        }
+
+        .btn-copy.copied {
+            background: var(--color-success);
+            color: white;
+            border-color: var(--color-success);
+        }
+
+        /* Settings Toggle */
+        .settings-toggle {
+            background: none;
+            border: 1px solid var(--color-border);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .settings-toggle:hover {
+            background: var(--color-bg-alt);
+            color: var(--color-text);
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .settings-panel.open {
+            max-height: 500px;
+        }
+
+        .settings-content {
+            padding: 1.25rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .settings-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .setting-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+        }
+
+        .setting-input {
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+        }
+
+        .setting-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .setting-select {
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--color-text);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .toast.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--color-success);
+        }
+
+        .toast.error {
+            background: var(--color-error);
+        }
+
+        /* Error state */
+        .error-message {
+            background: #FEE9E9;
+            color: var(--color-error);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">Risposta<span>Facile</span>.ai</a>
+        <div class="user-info">
+            <span class="usage-badge">Trial Gratuito</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Input Panel -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="panel-title-icon">📧</span>
+                    Email del Cliente
+                </div>
+                <button class="settings-toggle" onclick="toggleSettings()">⚙️ Impostazioni</button>
+            </div>
+            <div class="settings-panel" id="settingsPanel">
+                <div class="settings-content">
+                    <div class="setting-group">
+                        <label class="setting-label">Nome / Firma</label>
+                        <input type="text" class="setting-input" id="signatureName" placeholder="Dott. Mario Rossi">
+                    </div>
+                    <div class="setting-group">
+                        <label class="setting-label">Tono</label>
+                        <select class="setting-select" id="tone">
+                            <option value="formale">Formale</option>
+                            <option value="cordiale" selected>Cordiale</option>
+                            <option value="informale">Informale</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label class="setting-label">Studio</label>
+                        <input type="text" class="setting-input" id="studioName" placeholder="Studio Rossi & Associati">
+                    </div>
+                    <div class="setting-group">
+                        <label class="setting-label">Contesto aggiuntivo</label>
+                        <input type="text" class="setting-input" id="additionalContext" placeholder="es. Specializzato in startup">
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <textarea 
+                    class="input-textarea" 
+                    id="inputEmail"
+                    placeholder="Incolla qui l'email del cliente...
+
+Esempio:
+Buongiorno Dottore,
+volevo sapere quando scade il prossimo F24 per i contributi INPS della mia ditta individuale.
+Grazie, Mario Rossi"
+                ></textarea>
+                <div class="input-actions">
+                    <span class="char-count"><span id="charCount">0</span> caratteri</span>
+                    <button class="btn-generate" id="generateBtn" onclick="generateResponse()">
+                        <span class="btn-text">Genera Risposta →</span>
+                        <span class="spinner"></span>
+                    </button>
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="panel-title-icon">✨</span>
+                    Risposta Generata
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="output-placeholder" id="outputPlaceholder">
+                    <div class="output-placeholder-icon">💬</div>
+                    <h3>La risposta apparirà qui</h3>
+                    <p>Incolla l'email del cliente e clicca "Genera Risposta"</p>
+                </div>
+                <div class="output-content" id="outputContent">
+                    <textarea class="output-textarea" id="outputEmail"></textarea>
+                    <div class="output-actions">
+                        <div class="output-meta">
+                            <span class="output-meta-dot"></span>
+                            Generato in <span id="generationTime">0</span>s
+                        </div>
+                        <button class="btn-copy" id="copyBtn" onclick="copyResponse()">
+                            📋 Copia Risposta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Character count
+        const inputEmail = document.getElementById('inputEmail');
+        const charCount = document.getElementById('charCount');
+        
+        inputEmail.addEventListener('input', () => {
+            charCount.textContent = inputEmail.value.length;
+        });
+
+        // Settings toggle
+        function toggleSettings() {
+            document.getElementById('settingsPanel').classList.toggle('open');
+        }
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} visible`;
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 3000);
+        }
+
+        // Generate response
+        async function generateResponse() {
+            const email = inputEmail.value.trim();
+            
+            if (!email) {
+                showToast('Inserisci prima l\'email del cliente', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('generateBtn');
+            const errorDiv = document.getElementById('errorMessage');
+            
+            btn.classList.add('loading');
+            btn.disabled = true;
+            errorDiv.classList.remove('visible');
+
+            const startTime = Date.now();
+
+            // Get settings
+            const settings = {
+                signature: document.getElementById('signatureName').value,
+                tone: document.getElementById('tone').value,
+                studio: document.getElementById('studioName').value,
+                context: document.getElementById('additionalContext').value
+            };
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        settings: settings
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Errore durante la generazione');
+                }
+
+                const endTime = Date.now();
+                const duration = ((endTime - startTime) / 1000).toFixed(1);
+
+                // Show output
+                document.getElementById('outputPlaceholder').style.display = 'none';
+                document.getElementById('outputContent').classList.add('visible');
+                document.getElementById('outputEmail').value = data.response;
+                document.getElementById('generationTime').textContent = duration;
+
+                showToast('Risposta generata con successo!');
+
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.classList.add('visible');
+                showToast(error.message, 'error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        }
+
+        // Copy response
+        function copyResponse() {
+            const output = document.getElementById('outputEmail');
+            const btn = document.getElementById('copyBtn');
+            
+            navigator.clipboard.writeText(output.value).then(() => {
+                btn.classList.add('copied');
+                btn.innerHTML = '✓ Copiato!';
+                
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '📋 Copia Risposta';
+                }, 2000);
+                
+                showToast('Risposta copiata negli appunti!');
+            });
+        }
+
+        // Keyboard shortcut: Ctrl/Cmd + Enter to generate
+        inputEmail.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                generateResponse();
+            }
+        });
+    </script>
+</body>
+</html>
